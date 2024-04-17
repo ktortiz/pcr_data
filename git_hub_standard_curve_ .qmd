@@ -27,7 +27,7 @@ You can add options to executable code like this
 
 ```{r}
 #read excel file data
-git_hub_standard_curve_data_only_v2 <- read_excel("~/Desktop/r_studio/cmv_standard_curve_data_only.xlsx")
+git_hub_standard_curve_data_only_v2 <- read_excel("~/Desktop/r_studio/cmv_standard_curve_data_only_v2.xlsx")
 
 #designate the two y axis names with superscript
 y_expression <- expression (Plasmid~Concentration~(10^y~fg~per~uL)) 
