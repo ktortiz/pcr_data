@@ -1,0 +1,120 @@
+---
+title: "standard_curve"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(ggplot2)
+library(tidyverse) 
+library(dplyr) 
+library(patchwork) 
+library(hrbrthemes) 
+library(ggpubr)
+library(readxl)
+library(knitr)
+```
+
+You can add options to executable code like this
+
+```{r}
+#read excel file data
+git_hub_standard_curve_data_only <- read_excel("~/Desktop/r_studio/cmv_standard_curve_data_only.xlsx")
+
+#designate the two y axis names with superscript
+y_expression <- expression (Plasmid~Concentration~(10^y~fg~per~uL)) 
+y2_expression <-expression (Plasmid~Copy~Number~(5.38~x~10^y~per~rxn))
+```
+
+```{r}
+#create ggplot with aesthetics
+ggplot(git_hub_standard_curve_data_only, mapping = aes(x = ct_value, y = cx_ss, colour = plate))+
+  
+#create labels for title, subtitle, and x axis
+labs(title = "Target Standard Curve",subtitle = "Raw Data Ct Values", x = "Cyclic Threshold Value")+
+  
+#designate the top and bottom y axis and indicate the ratio between the two (*1 = 1/1, *0.5 = 1/2)
+scale_y_continuous(name = y_expression, sec.axis = sec_axis(trans = ~.*0.5,name = y2_expression))+
+  
+#select the guide labels
+guides(colour = guide_legend ("Plates"))+
+  
+#add data points
+geom_point()
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+#create ggplot with aesthetics (removing designation of colour for plates)
+ggplot(git_hub_standard_curve_data_only, mapping = aes(x = ct_value, y = cx_ss))+
+  
+#creates labels for title, subtitle and x axis
+labs(title = "Target Standard Curve",subtitle = "Raw Data Ct Values", x = "Cyclic Threshold Value")+
+  
+#designate the top and bottom y axis and indicate the ratio between the two (*1 = 1/1, *0.5 = 1/2)
+scale_y_continuous(name = y_expression, sec.axis = sec_axis(trans = ~.*0.5,name = y2_expression))+
+  
+#add data points
+geom_point()+
+  
+#adds best fit line
+geom_smooth(method = "lm",colour = 'black',linetype = 'dashed')+
+  
+#reduces the x line to 8 and 40 
+xlim(8, 40)+
+  
+#adds the regression line equation for all points
+stat_regline_equation(label.x=29, label.y=9)+
+  
+#adds the R squared value for all points
+stat_cor(aes(label=..rr.label..), label.x=29, label.y=8)
+
+
+```
+
+```{r}
+#create ggplot with aesthetics (removing designation of colour for plates)
+ggplot(git_hub_standard_curve_data_only, mapping = aes(x = ct_value, y = cx_ss))+
+  
+#creates labels for title, subtitle and x axis
+labs(title = "Target Standard Curve",subtitle = "Raw Data Ct Values", x = "Cyclic Threshold Value")+
+  
+#designate the top and bottom y axis and indicate the ratio between the two (*1 = 1/1, *0.5 = 1/2)
+scale_y_continuous(name = y_expression, sec.axis = sec_axis(trans = ~.*0.5,name = y2_expression))+
+  
+#maintains data points for calculations but changes the colour to transparent
+geom_point(colour = 'transparent')+
+  
+#adds best fit line
+geom_smooth(method = "lm",colour = 'black',linetype = 'dashed')+
+  
+#reduces the x line to 7 and 40 
+xlim(7, 40)+
+  
+#adds the regression line equation for all points
+stat_regline_equation(label.x=29, label.y=9)+
+  
+#adds the R squared value for all points (typically )
+stat_cor(aes(label=..rr.label..), label.x=29, label.y=8)+
+
+#adds the upper and lower limit of detection lines (ULOD and LLOD, respectively)
+geom_vline(xintercept=c(8,40.0), linetype='dashed', colour = 'red', lwd=0.7)+
+
+#adds the calculated detectable concentration limit (cDCL) or copies per mL (cpm)   
+geom_hline(yintercept=c(1), linetype='dashed', colour = 'purple', lwd=0.7)+
+
+#adds the calculated positive concentration limit (cPCL) or copies per mL (cpm)
+geom_hline(yintercept=c(0), linetype='dashed', colour = 'blue', lwd=0.7)+
+
+#designates the label, label location and text color of the limits
+annotate("text", x = c(9.5,20,38.3,20,20), y=c(1.5,1.5,1.5,0.5,-0.5), label = c("ULOD", "cDCL >200 cpm", "LLOD","cPCL >100 cpm","cNCL <100 cpm"), colour = c("red","purple","red","blue","green4"))
+```
