@@ -27,7 +27,7 @@ You can add options to executable code like this
 
 ```{r}
 #read excel file data
-git_hub_standard_curve_data_only <- read_excel("~/Desktop/r_studio/cmv_standard_curve_data_only.xlsx")
+git_hub_standard_curve_data_only_v2 <- read_excel("~/Desktop/r_studio/cmv_standard_curve_data_only.xlsx")
 
 #designate the two y axis names with superscript
 y_expression <- expression (Plasmid~Concentration~(10^y~fg~per~uL)) 
@@ -36,7 +36,7 @@ y2_expression <-expression (Plasmid~Copy~Number~(5.38~x~10^y~per~rxn))
 
 ```{r}
 #create ggplot with aesthetics
-ggplot(git_hub_standard_curve_data_only, mapping = aes(x = ct_value, y = cx_ss, colour = plate))+
+ggplot(git_hub_standard_curve_data_only_v2, mapping = aes(x = ct_value, y = cx_ss, colour = plate))+
   
 #create labels for title, subtitle, and x axis
 labs(title = "Target Standard Curve",subtitle = "Raw Data Ct Values", x = "Cyclic Threshold Value")+
@@ -55,7 +55,7 @@ The `echo: false` option disables the printing of code (only output is displayed
 
 ```{r}
 #create ggplot with aesthetics (removing designation of colour for plates)
-ggplot(git_hub_standard_curve_data_only, mapping = aes(x = ct_value, y = cx_ss))+
+ggplot(git_hub_standard_curve_data_only_v2, mapping = aes(x = ct_value, y = cx_ss))+
   
 #creates labels for title, subtitle and x axis
 labs(title = "Target Standard Curve",subtitle = "Raw Data Ct Values", x = "Cyclic Threshold Value")+
@@ -83,7 +83,7 @@ stat_cor(aes(label=..rr.label..), label.x=29, label.y=8)
 
 ```{r}
 #create ggplot with aesthetics (removing designation of colour for plates)
-ggplot(git_hub_standard_curve_data_only, mapping = aes(x = ct_value, y = cx_ss))+
+ggplot(git_hub_standard_curve_data_only_v2, mapping = aes(x = ct_value, y = cx_ss))+
   
 #creates labels for title, subtitle and x axis
 labs(title = "Target Standard Curve",subtitle = "Raw Data Ct Values", x = "Cyclic Threshold Value")+
